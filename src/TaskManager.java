@@ -1,26 +1,27 @@
 
-import com.sun.source.util.TaskListener;
+
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TaskManager {
 
     List<String> taskList = new ArrayList<>();
-
+   
     public TaskManager() {
         
     }
 
-    public static void newTask(String insertTask) {
+    public void newTask(String insertTask) {
         taskList.add(insertTask);
     }
 
-    public static void removeTask() {
+    public void removeTask() {
 
     }
 
-    public static void printTasks () {
+    public void printTasks () {
 
     }
 
