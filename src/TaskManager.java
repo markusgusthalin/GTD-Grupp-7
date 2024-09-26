@@ -29,15 +29,15 @@ public class TaskManager {
 
         JTextField inputInsertTask = new JTextField();
         JButton insertBtn = new JButton("Lägg till uppgift");
-        //insertBtn.addActionListener(e -> {
-            //inputInsertTask(inputInsertMoney.getText());
-        ;
+        insertBtn.addActionListener(e -> {
+            newTask(inputInsertTask.getText());
+        });
 
-        JTextField removeTask = new JTextField();
+        JTextField inputRemoveTask = new JTextField();
         JButton removeBtn = new JButton("Ta bort uppgift");
-        //withdrawBtn.addActionListener(e -> {
-            //withdrawMoney(inputWithdrawMoney.getText());
-        ;
+        removeBtn.addActionListener(e -> {
+            removeTask(inputRemoveTask.getText());
+        });
 
         panel.setLayout(new GridLayout(4, 1));
         panel.add(taskHeader);
@@ -46,12 +46,8 @@ public class TaskManager {
         panel.add(inputInsertTask);
         panel.add(insertBtn);
 
-        panel.add(removeTask);
+        panel.add(inputRemoveTask);
         panel.add(removeBtn);
-        // panel.add(inputInsertTask);
-        // panel.add(insertBtn);
-        // panel.add(inputRemoveTask);
-        // panel.add(removeBtn);
 
         frame.add(panel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -63,7 +59,8 @@ public class TaskManager {
         taskList.add(insertTask);
     }
 
-    public void removeTask() {
+    public void removeTask(String removeTask) {
+        taskList.remove(0);
 
     }
 
