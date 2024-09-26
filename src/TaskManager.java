@@ -5,9 +5,11 @@
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 
 public class TaskManager {
@@ -25,9 +27,27 @@ public class TaskManager {
 
     public TaskManager() {
 
+        JTextField inputInsertTask = new JTextField();
+        JButton insertBtn = new JButton("Lägg till uppgift");
+        //insertBtn.addActionListener(e -> {
+            //inputInsertTask(inputInsertMoney.getText());
+        ;
+
+        JTextField removeTask = new JTextField();
+        JButton removeBtn = new JButton("Ta bort uppgift");
+        //withdrawBtn.addActionListener(e -> {
+            //withdrawMoney(inputWithdrawMoney.getText());
+        ;
+
         panel.setLayout(new GridLayout(4, 1));
         panel.add(taskHeader);
         panel.add(tasks);
+
+        panel.add(inputInsertTask);
+        panel.add(insertBtn);
+
+        panel.add(removeTask);
+        panel.add(removeBtn);
         // panel.add(inputInsertTask);
         // panel.add(insertBtn);
         // panel.add(inputRemoveTask);
