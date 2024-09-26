@@ -20,6 +20,7 @@ public class TaskManager {
     JPanel panel = new JPanel();
     JLabel taskHeader = new JLabel("1. Uppgifter");
     JLabel tasks = new JLabel("2. Uppgifter");
+    JPanel taskListPanel = new JPanel();
     
     JPanel doneTasks  = new JPanel();
 
@@ -57,6 +58,7 @@ public class TaskManager {
 
     public void newTask(String insertTask) {
         taskList.add(insertTask);
+        printTasks();
     }
 
     public void removeTask(String removeTask) {
@@ -65,8 +67,19 @@ public class TaskManager {
     }
 
     public void printTasks () {
+        taskListPanel.setLayout(new GridLayout(taskList.size(), 1));
 
+        taskListPanel.removeAll();
+
+        for (String item : taskList) {
+            JLabel addTaskList = new JLabel(item);
+            taskListPanel.add(addTaskList);
+        }
+
+        panel.add(taskListPanel);
+        frame.pack();
     }
+    
 
 
 
