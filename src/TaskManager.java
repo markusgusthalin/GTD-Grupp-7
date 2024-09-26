@@ -1,11 +1,19 @@
+
+import com.sun.source.util.TaskListener;
+
+
+import java.util.ArrayList;
+
 public class TaskManager {
 
+    List<String> taskList = new ArrayList<>();
+
     public TaskManager() {
-        System.out.println("Hej!");
+        
     }
 
-    public static void newTask() {
-
+    public static void newTask(String insertTask) {
+        taskList.add(insertTask);
     }
 
     public static void removeTask() {
