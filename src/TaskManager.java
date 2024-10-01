@@ -1,16 +1,20 @@
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JCheckBox;
 
 public class TaskManager {
 
@@ -42,7 +46,10 @@ public class TaskManager {
         JButton insertBtn = new JButton("Lägg till uppgift");
         //insertBtn.setPreferredSize(new Dimension(150, 20));
         insertBtn.addActionListener(e -> {
-            newTask(inputInsertTask.getText());
+            try {
+                newTask(inputInsertTask.getText());
+            } catch (IOException ex) {
+            }
             inputInsertTask.setText("");
         });
 
@@ -117,43 +124,59 @@ public class TaskManager {
         frame.setVisible(true);
     }
 
-    public void newTask(String insertTask) {
+    public void newTask(String insertTask) throws IOException {
         taskList.add(insertTask);
         printTasks();
     }
-
-    public void removeTask(String removeTask) {
+    /* 
+    public void removeTask(String removeTask) throws IOException {
         int index = Integer.parseInt(removeTask);
         doneList.add(taskList.get(index-1));
         taskList.remove(index - 1);
         printTasks();
     }
-    public void removeTask(int removeTask) {
+    */
+    public void removeTask(int removeTask) throws IOException {
         int index = removeTask;
         doneList.add(taskList.get(index-1));
         taskList.remove(index - 1);
         printTasks();
     }
 
-    public void printTasks () {
+    public void printTasks () throws IOException {
         taskListPanel.setLayout(new GridLayout(taskList.size(), 1));
 
         taskListPanel.removeAll();
-        JCheckBox checkBox;
 
-        int i = 1;
-        for (String item : taskList) {
-            JLabel addTaskList = new JLabel(i++ + " " +item);
-            //taskListPanel.add(addTaskList);
-            checkBox = new JCheckBox(i - 1 + " " + item);
-            int j = i - 1;
+        if (taskList.isEmpty()) {
+            BufferedImage bufferedImage = ImageIO.read(getClass().getResourceAsStream("chuck.png"));
+            Image image = bufferedImage.getScaledInstance(200, 125, Image.SCALE_DEFAULT);
+            JLabel imageLabel = new JLabel(new ImageIcon(image));
             
-            checkBox.setName(item);
-            taskListPanel.add(checkBox);
+            taskListPanel.add(imageLabel);
+        }
+        else {
+            JCheckBox checkBox;
+
+            int i = 1;
+            for (String item : taskList) {
+                i++;
+                int j = i - 1;
+                //JLabel addTaskList = new JLabel(i++ + " " +item);
+                //taskListPanel.add(addTaskList);
+                checkBox = new JCheckBox(String.valueOf(j) + " " + item);
             
-            checkBox.addActionListener(e ->{
-                removeTask(j);
-            });
+                //checkBox.setName(item);
+                taskListPanel.add(checkBox);
+            
+                checkBox.addActionListener(e ->{
+                    try {
+                        removeTask(j);
+                    } catch (IOException ex) {
+                    }
+                });
+            }
+            
         }
 
         GridBagConstraints gbc = new GridBagConstraints();
