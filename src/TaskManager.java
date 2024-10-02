@@ -31,37 +31,26 @@ public class TaskManager {
     JPanel doneListPanel = new JPanel();
     
     //JLabel-objekt.
-    JLabel taskHeader = new JLabel("Skriv in ny uppgift nedan, klicka sedan på \"Lägg till uppgift\""); //
-    //JLabel removeHeader = new JLabel("Skriv in numret på uppgiften som är utförd, klicka sedan på \"Ta bort\""); 
+    JLabel taskHeader = new JLabel("Skriv in ny uppgift nedan, klicka sedan på \"Lägg till uppgift\"");  
     JLabel removeHeader = new JLabel("Klicka i rutan för att markera en uppgift som klar");
     JLabel toDoHeader = new JLabel("Uppgifter att göra");
     JLabel doneHeader = new JLabel("Utförda uppgifter");
 
-
-
     public TaskManager() {
 
         JTextField inputInsertTask = new JTextField();
-        //inputInsertTask.setPreferredSize(new Dimension(150, 20));
         JButton insertBtn = new JButton("Lägg till uppgift");
-        //insertBtn.setPreferredSize(new Dimension(150, 20));
         insertBtn.addActionListener(e -> {
-            try {
-                newTask(inputInsertTask.getText());
-            } catch (IOException ex) {
+            if (!inputInsertTask.getText().isEmpty()) {
+                try {
+                    newTask(inputInsertTask.getText());
+                } catch (IOException ex) {
+                }
+                inputInsertTask.setText("");
             }
-            inputInsertTask.setText("");
+
+            
         });
-
-        // JTextField inputRemoveTask = new JTextField();
-        // inputRemoveTask.setPreferredSize(new Dimension(150, 20));
-        // JButton removeBtn = new JButton("Ta bort uppgift");
-        // removeBtn.setPreferredSize(new Dimension(150,20));
-        // removeBtn.addActionListener(e -> {
-        //     removeTask(inputRemoveTask.getText());
-        //     inputRemoveTask.setText("");
-
-        // });
 
         panel.setLayout(new GridBagLayout());
 
@@ -72,12 +61,6 @@ public class TaskManager {
         final int RIGHT = 30;
         final int TOP = 10;
         EmptyBorder border1 = new EmptyBorder(TOP, LEFT, BOTTOM, RIGHT);
-        
-        // final int BOTTOM2 = 0;
-        // final int LEFT2 = 30;
-        // final int RIGHT2 = 30;
-        // final int TOP2 = 0;
-        // EmptyBorder border2 = new EmptyBorder(TOP2, LEFT2, BOTTOM2, RIGHT2);
 
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.gridy = 0;
@@ -88,7 +71,6 @@ public class TaskManager {
         gbc.fill = 1;
         gbc.gridy = 1;
         panel.add(inputInsertTask, gbc);
-        //inputInsertTask.setBorder(border2);
 
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.fill = 1;
@@ -99,14 +81,6 @@ public class TaskManager {
         gbc.gridy = 2;
         panel.add(removeHeader, gbc);
         removeHeader.setBorder(border1);
-
-        // gbc.gridwidth = GridBagConstraints.RELATIVE;
-        // gbc.gridy = 3;
-        // panel.add(inputRemoveTask, gbc);
-        
-
-        // gbc.gridwidth = GridBagConstraints.REMAINDER;
-        // panel.add(removeBtn, gbc);
 
         gbc.gridwidth = GridBagConstraints.RELATIVE;
         gbc.gridy = 4;
@@ -125,17 +99,11 @@ public class TaskManager {
     }
 
     public void newTask(String insertTask) throws IOException {
+        
         taskList.add(insertTask);
         printTasks();
     }
-    /* 
-    public void removeTask(String removeTask) throws IOException {
-        int index = Integer.parseInt(removeTask);
-        doneList.add(taskList.get(index-1));
-        taskList.remove(index - 1);
-        printTasks();
-    }
-    */
+    
     public void removeTask(int removeTask) throws IOException {
         int index = removeTask;
         doneList.add(taskList.get(index-1));
@@ -143,40 +111,50 @@ public class TaskManager {
         printTasks();
     }
 
+    public JLabel getImage() throws IOException {
+        BufferedImage bufferedImage = ImageIO.read(getClass().getResourceAsStream("chuck.png"));
+        Image image = bufferedImage.getScaledInstance(200, 125, Image.SCALE_DEFAULT);
+        JLabel imageLabel = new JLabel(new ImageIcon(image));
+        return imageLabel;
+    } 
+
+    public JPanel getCheckBoxes() {
+        JCheckBox checkBox;
+        int i = 1;
+        for (String item : taskList) {
+            i++;
+            int j = i - 1;
+            checkBox = new JCheckBox(String.valueOf(j) + " " + item);
+            taskListPanel.add(checkBox);
+            
+            checkBox.addActionListener(e ->{
+                try {
+                    removeTask(j);
+                } catch (IOException ex) {
+                }
+            });
+            }
+        return taskListPanel;
+    }
+
+    public JPanel getDoneList() {
+        int j = 1;
+        for (String item : doneList) {
+            JLabel doneTaskList = new JLabel(j++ + " " +item);
+            doneListPanel.add(doneTaskList);
+        }
+        return doneListPanel;
+    }
+
     public void printTasks () throws IOException {
         taskListPanel.setLayout(new GridLayout(taskList.size(), 1));
-
         taskListPanel.removeAll();
 
         if (taskList.isEmpty()) {
-            BufferedImage bufferedImage = ImageIO.read(getClass().getResourceAsStream("chuck.png"));
-            Image image = bufferedImage.getScaledInstance(200, 125, Image.SCALE_DEFAULT);
-            JLabel imageLabel = new JLabel(new ImageIcon(image));
-            
-            taskListPanel.add(imageLabel);
+            taskListPanel.add(getImage());
         }
         else {
-            JCheckBox checkBox;
-
-            int i = 1;
-            for (String item : taskList) {
-                i++;
-                int j = i - 1;
-                //JLabel addTaskList = new JLabel(i++ + " " +item);
-                //taskListPanel.add(addTaskList);
-                checkBox = new JCheckBox(String.valueOf(j) + " " + item);
-            
-                //checkBox.setName(item);
-                taskListPanel.add(checkBox);
-            
-                checkBox.addActionListener(e ->{
-                    try {
-                        removeTask(j);
-                    } catch (IOException ex) {
-                    }
-                });
-            }
-            
+            taskListPanel = getCheckBoxes();
         }
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -186,18 +164,12 @@ public class TaskManager {
         panel.add(taskListPanel, gbc);
 
         doneListPanel.setLayout(new GridLayout(doneList.size(), 1));
-
         doneListPanel.removeAll();
 
-        int j = 1;
-        for (String item : doneList) {
-            JLabel doneTaskList = new JLabel(j++ + " " +item);
-            doneListPanel.add(doneTaskList);
-        }
+        doneListPanel = getDoneList();
 
         gbc.gridx = 1;
         panel.add(doneListPanel, gbc);
-
 
         frame.pack();
     }
