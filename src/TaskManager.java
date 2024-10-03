@@ -1,4 +1,4 @@
-import java.awt.GridBagConstraints;
+import java.awt.GridBagConstraints;     //Importerar alla färdiga klasser vi behöver.
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -16,9 +16,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-public class TaskManager {
+public class TaskManager {      //Klassen som utgör själva programmet.
 
-    //Listor.
+    //Listor för att spara nya uppgifter och genomförda uppgifter.
     List<String> taskList = new ArrayList<>();
     List<String> doneList = new ArrayList<>();
 
@@ -36,9 +36,9 @@ public class TaskManager {
     JLabel toDoHeader = new JLabel("Uppgifter att göra");
     JLabel doneHeader = new JLabel("Utförda uppgifter");
 
-    public TaskManager() {
+    public TaskManager() {      //Metoden Taskmanager skapar vårt fönster.
 
-        JTextField inputInsertTask = new JTextField();
+        JTextField inputInsertTask = new JTextField();      //Textfält och knapp för att lägga till ny uppgift. Lämnaas fältet tomt så händer inget.
         JButton insertBtn = new JButton("Lägg till uppgift");
         insertBtn.addActionListener(e -> {
             if (!inputInsertTask.getText().isEmpty()) {
@@ -52,7 +52,7 @@ public class TaskManager {
             
         });
 
-        panel.setLayout(new GridBagLayout());
+        panel.setLayout(new GridBagLayout());       //Själva layouten.
 
         GridBagConstraints gbc = new GridBagConstraints();
         
@@ -97,28 +97,28 @@ public class TaskManager {
         frame.pack();
         frame.setVisible(true);
     }
-
+    //Metod för att addera uppgift till listan med nya uppgifter. Tar emot sträng med texten som beskriver uppgiften.
     public void newTask(String insertTask) throws IOException {
-        
+
         taskList.add(insertTask);
-        printTasks();
+        printTasks();       //Åberopar metod för att skriva ut listan med uppgifter.
     }
     
-    public void removeTask(int removeTask) throws IOException {
-        int index = removeTask;
+    public void removeTask(int removeTask) throws IOException {     //Metod för att ta bort uppgift och flytta den till listan med slutförda.
+        int index = removeTask;                                     //Tar emot int som används för att ta bort uppgiften på rätt indexplats.
         doneList.add(taskList.get(index-1));
         taskList.remove(index - 1);
         printTasks();
     }
 
-    public JLabel getImage() throws IOException {
+    public JLabel getImage() throws IOException {   //Metod för att visa bild när alla uppgifter är slutförda.
         BufferedImage bufferedImage = ImageIO.read(getClass().getResourceAsStream("chuck.png"));
         Image image = bufferedImage.getScaledInstance(200, 125, Image.SCALE_DEFAULT);
         JLabel imageLabel = new JLabel(new ImageIcon(image));
         return imageLabel;
     } 
 
-    public JPanel getCheckBoxes() {
+    public JPanel getCheckBoxes() {     //Metod som skapar en checkbox för varje uppgift.
         JCheckBox checkBox;
         int i = 1;
         for (String item : taskList) {
@@ -127,7 +127,7 @@ public class TaskManager {
             checkBox = new JCheckBox(String.valueOf(j) + " " + item);
             taskListPanel.add(checkBox);
             
-            checkBox.addActionListener(e ->{
+            checkBox.addActionListener(e ->{        //När checkboxen klickas så åberobas metoden som flyttar uppgiften till slutfört.
                 try {
                     removeTask(j);
                 } catch (IOException ex) {
@@ -137,7 +137,7 @@ public class TaskManager {
         return taskListPanel;
     }
 
-    public JPanel getDoneList() {
+    public JPanel getDoneList() {   //Metod som visar listan med slutförda uppgifter.
         int j = 1;
         for (String item : doneList) {
             JLabel doneTaskList = new JLabel(j++ + " " +item);
@@ -146,18 +146,18 @@ public class TaskManager {
         return doneListPanel;
     }
 
-    public void printTasks () throws IOException {
+    public void printTasks () throws IOException {      //Metoden som skriver ut listan med återstående uppgifter.
         taskListPanel.setLayout(new GridLayout(taskList.size(), 1));
         taskListPanel.removeAll();
 
-        if (taskList.isEmpty()) {
+        if (taskList.isEmpty()) {           //Kontrollerar om listan är tömd, åberopar i så fall metoden för att visa bilden.
             taskListPanel.add(getImage());
         }
         else {
-            taskListPanel = getCheckBoxes();
+            taskListPanel = getCheckBoxes();    //Annars Presenteras återstående uppgifter.
         }
 
-        GridBagConstraints gbc = new GridBagConstraints();
+        GridBagConstraints gbc = new GridBagConstraints();      //Layoutförändringar när listor presenteras.
 
         gbc.gridx = 0;
         gbc.gridy = 5;
@@ -174,7 +174,7 @@ public class TaskManager {
         frame.pack();
     }
     
-    public static void main(String[] args) {
+    public static void main(String[] args) {    //Main-metoden där Taskmanager åberopas för att skapa gränssnittet.
         new TaskManager();
     }
 
